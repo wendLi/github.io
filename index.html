@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP-J 初一年级练习题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 16px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #1a73e8;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .info-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .info-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+        .info-item {
+            flex: 1;
+        }
+        .info-item label {
+            display: block;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .info-item input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .section-title {
+            font-size: 1.1rem;
+            color: #1a73e8;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8f0fe;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        .code-block {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 8px 0;
+            border-left: 3px solid #1a73e8;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background: #e8f0fe;
+        }
+        .option.selected {
+            background: #e8f0fe;
+            border: 2px solid #1a73e8;
+        }
+        .option input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #1a73e8;
+            background: transparent;
+            font-size: 1rem;
+            padding: 4px 8px;
+            min-width: 80px;
+            outline: none;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: #1a73e8;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        .submit-btn:hover {
+            background: #1557b0;
+        }
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            text-align: center;
+            display: none;
+        }
+        .result-card.show {
+            display: block;
+        }
+        .score {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 16px 0;
+        }
+        .score span {
+            font-size: 1.2rem;
+        }
+        .result-detail {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            .info-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .code-block {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSP-J 初一年级练习题</h1>
+        <p class="subtitle">适合：初一年级 | 难度：入门~基础 | 时长：约90分钟 | 总分：100分</p>
+
+        <div class="result-card" id="resultCard">
+            <div class="score"><span id="scoreNum">0</span><span>分</span></div>
+            <div class="result-detail" id="resultDetail"></div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-row">
+                <div class="info-item">
+                    <label>姓名</label>
+                    <input type="text" id="name" placeholder="请输入姓名">
+                </div>
+                <div class="info-item">
+                    <label>班级</label>
+                    <input type="text" id="className" placeholder="请输入班级">
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-item">
+                    <label>学号</label>
+                    <input type="text" id="studentId" placeholder="请输入学号">
+                </div>
+            </div>
+        </div>
+
+        <!-- 一、选择题 -->
+        <div class="section">
+            <h2 class="section-title">一、选择题（每题3分，共30分）</h2>
+            
+            <div class="question" data-answer="C">
+                <div class="question-title">1. 以下哪个是合法的变量名？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q1" value="A"> A. 2name</label>
+                    <label class="option"><input type="radio" name="q1" value="B"> B. my-score</label>
+                    <label class="option"><input type="radio" name="q1" value="C"> C. _count</label>
+                    <label class="option"><input type="radio" name="q1" value="D"> D. int</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="B">
+                <div class="question-title">2. 表达式 17/5 和 17%5 的结果分别是？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q2" value="A"> A. 3.4和2</label>
+                    <label class="option"><input type="radio" name="q2" value="B"> B. 3和2</label>
+                    <label class="option"><input type="radio" name="q2" value="C"> C. 3和3</label>
+                    <label class="option"><input type="radio" name="q2" value="D"> D. 4和2</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="B">
+                <div class="question-title">3. 下列哪种数据类型能存储的数值范围最大？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q3" value="A"> A. int</label>
+                    <label class="option"><input type="radio" name="q3" value="B"> B. long long</label>
+                    <label class="option"><input type="radio" name="q3" value="C"> C. short</label>
+                    <label class="option"><input type="radio" name="q3" value="D"> D. char</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="D">
+                <div class="question-title">4. int a=5,b=3; 输出a/b和a%b分别是？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q4" value="A"> A. 1 2</label>
+                    <label class="option"><input type="radio" name="q4" value="B"> B. 1 5</label>
+                    <label class="option"><input type="radio" name="q4" value="C"> C. 2 1</label>
+                    <label class="option"><input type="radio" name="q4" value="D"> D. 2 2</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="C">
+                <div class="question-title">5. 以下哪个循环会执行5次？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q5" value="A"> A. for(i=1;i&lt;5;i++)</label>
+                    <label class="option"><input type="radio" name="q5" value="B"> B. for(i=0;i&lt;=5;i++)</label>
+                    <label class="option"><input type="radio" name="q5" value="C"> C. for(i=0;i&lt;5;i++)</label>
+                    <label class="option"><input type="radio" name="q5" value="D"> D. for(i=1;i&lt;=6;i++)</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="C">
+                <div class="question-title">6. int a[10]; 合法的下标范围是？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q6" value="A"> A. 1~10</label>
+                    <label class="option"><input type="radio" name="q6" value="B"> B. 0~10</label>
+                    <label class="option"><input type="radio" name="q6" value="C"> C. 0~9</label>
+                    <label class="option"><input type="radio" name="q6" value="D"> D. 1~9</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="B">
+                <div class="question-title">7. !(3&gt;5) &amp;&amp; (2&lt;4) 的结果是？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q7" value="A"> A. 0</label>
+                    <label class="option"><input type="radio" name="q7" value="B"> B. 1</label>
+                    <label class="option"><input type="radio" name="q7" value="C"> C. 编译错误</label>
+                    <label class="option"><input type="radio" name="q7" value="D"> D. 不确定</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="B">
+                <div class="question-title">8. 十进制数13转换成二进制是？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q8" value="A"> A. 1100</label>
+                    <label class="option"><input type="radio" name="q8" value="B"> B. 1101</label>
+                    <label class="option"><input type="radio" name="q8" value="C"> C. 1110</label>
+                    <label class="option"><input type="radio" name="q8" value="D"> D. 1111</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="A">
+                <div class="question-title">9. 求1~100中能被3整除的数的和，输出是？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q9" value="A"> A. 1683</label>
+                    <label class="option"><input type="radio" name="q9" value="B"> B. 5050</label>
+                    <label class="option"><input type="radio" name="q9" value="C"> C. 3366</label>
+                    <label class="option"><input type="radio" name="q9" value="D"> D. 828</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="B">
+                <div class="question-title">10. 关于递归函数说法正确的是？</div>
+                <div class="options">
+                    <label class="option"><input type="radio" name="q10" value="A"> A. 不需要终止条件</label>
+                    <label class="option"><input type="radio" name="q10" value="B"> B. 必须有终止条件</label>
+                    <label class="option"><input type="radio" name="q10" value="C"> C. 效率一定比循环高</label>
+                    <label class="option"><input type="radio" name="q10" value="D"> D. 只能计算阶乘</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 二、读程序写结果 -->
+        <div class="section">
+            <h2 class="section-title">二、读程序写结果（每题5分，共20分）</h2>
+            <p style="color:#666;margin-bottom:16px;">阅读以下程序，写出输出结果</p>
+
+            <div class="question" data-answer="15">
+                <div class="question-title">1. 程序输出是什么？</div>
+                <div class="code-block">int n=12345,s=0;
+while(n&gt;0){s+=n%10; n/=10;}
+print s;</div>
+                <div style="margin-top:10px;">输出：<input type="text" class="blank-input" data-answer="15" placeholder="请输入答案"></div>
+            </div>
+
+            <div class="question" data-answer="1">
+                <div class="question-title">2. 程序输出是什么？</div>
+                <div class="code-block">int a[6]={5,3,8,1,9,2};
+int m=a[0];
+for(i=1;i&lt;6;i++) if(a[i]&lt;m) m=a[i];
+print m;</div>
+                <div style="margin-top:10px;">输出：<input type="text" class="blank-input" data-answer="1" placeholder="请输入答案"></div>
+            </div>
+
+            <div class="question" data-answer="120">
+                <div class="question-title">3. 程序输出是什么？</div>
+                <div class="code-block">int f(int n){if(n==1)return 1; return n*f(n-1);}
+print f(5);</div>
+                <div style="margin-top:10px;">输出：<input type="text" class="blank-input" data-answer="120" placeholder="请输入答案"></div>
+            </div>
+
+            <div class="question" data-answer="55">
+                <div class="question-title">4. 程序输出是什么？</div>
+                <div class="code-block">int a=1,b=1;
+for(i=3;i&lt;=10;i++){int c=a+b;a=b;b=c;}
+print b;</div>
+                <div style="margin-top:10px;">输出：<input type="text" class="blank-input" data-answer="55" placeholder="请输入答案"></div>
+            </div>
+        </div>
+
+        <!-- 三、完善程序 -->
+        <div class="section">
+            <h2 class="section-title">三、完善程序（每空3分，共15分）</h2>
+
+            <div class="question">
+                <div class="question-title">1. 判断质数 - 请补全代码</div>
+                <p style="color:#666;margin-bottom:10px;">程序判断输入的正整数 n 是否为质数</p>
+                <div class="code-block">int n; bool isPrime=true; cin&gt;&gt;n;
+if(n&lt;___①___) isPrime=false;
+for(i=2;i*i&lt;=n;i++){if(n%___②___==0){isPrime=false;___③___;}}</div>
+                <div style="display:flex;gap:20px;margin-top:10px;flex-wrap:wrap;">
+                    <div>① <input type="text" class="blank-input" data-answer="2" style="width:60px;" placeholder=""></div>
+                    <div>② <input type="text" class="blank-input" data-answer="i" style="width:60px;" placeholder=""></div>
+                    <div>③ <input type="text" class="blank-input" data-answer="break" style="width:80px;" placeholder=""></div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-title">2. 冒泡排序 - 请补全代码</div>
+                <p style="color:#666;margin-bottom:10px;">用冒泡排序将数组从小到大排列</p>
+                <div class="code-block">int a[5]={5,3,1,4,2};
+for(i=0;i&lt;4;i++){for(j=0;j&lt;___④___;j++){if(a[j]___⑤___a[j+1]){swap(a[j],a[j+1]);}}}</div>
+                <div style="display:flex;gap:20px;margin-top:10px;flex-wrap:wrap;">
+                    <div>④ <input type="text" class="blank-input" data-answer="4-i" style="width:60px;" placeholder=""></div>
+                    <div>⑤ <input type="text" class="blank-input" data-answer="&gt;" style="width:60px;" placeholder=""></div>
+                </div>
+            </div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="submitQuiz()">提交答题</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // 答案数据
+        const answers = {
+            q1: 'C', q2: 'B', q3: 'B', q4: 'D', q5: 'C',
+            q6: 'C', q7: 'B', q8: 'B', q9: 'A', q10: 'B',
+            blank1: '15', blank2: '1', blank3: '120', blank4: '55',
+            fill1_1: '2', fill1_2: 'i', fill1_3: 'break',
+            fill2_1: '4-i', fill2_2: '>'
+        };
+
+        // 分数配置
+        const scores = {
+            choice: 3,      // 选择题每题3分
+            program: 5,     // 读程序每题5分
+            fill: 3         // 填空每空3分
+        };
+
+        // 本地存储
+        const STORAGE_KEY = 'cspj_quiz_results';
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function saveResult(result) {
+            let results = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            results.push({
+                ...result,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
+        }
+
+        function calculateScore() {
+            let totalScore = 0;
+            let details = [];
+            let userAnswers = {};
+
+            // 计算选择题
+            let choiceCorrect = 0;
+            for (let i = 1; i <= 10; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                userAnswers[`q${i}`] = selected ? selected.value : '';
+                if (selected && selected.value === answers[`q${i}`]) {
+                    choiceCorrect++;
+                }
+            }
+            let choiceScore = choiceCorrect * scores.choice;
+            totalScore += choiceScore;
+            details.push(`选择题：${choiceCorrect}/10 正确，得 ${choiceScore} 分`);
+
+            // 计算读程序
+            let programCorrect = 0;
+            const blankInputs = document.querySelectorAll('.blank-input[data-answer]');
+            blankInputs.forEach((input, index) => {
+                const answerKey = input.dataset.answer;
+                const userAns = input.value.trim();
+                const correctAns = String(answerKey).trim();
+                userAnswers[`blank${index + 1}`] = userAns;
+                
+                // 特殊处理答案匹配
+                let isCorrect = false;
+                if (correctAns === userAns) {
+                    isCorrect = true;
+                } else if (correctAns === '&gt;' && userAns === '>') {
+                    isCorrect = true;
+                } else if (correctAns === 'i' && userAns === 'i') {
+                    isCorrect = true;
+                } else if (correctAns === '4-i' && (userAns === '4-i' || userAns === '4 - i')) {
+                    isCorrect = true;
+                } else if (correctAns === 'break' && userAns === 'break') {
+                    isCorrect = true;
+                } else if (correctAns === '2' && userAns === '2') {
+                    isCorrect = true;
+                }
+                
+                if (isCorrect) programCorrect++;
+            });
+            let programScore = programCorrect * scores.program;
+            totalScore += programScore;
+            details.push(`读程序：${programCorrect}/4 正确，得 ${programScore} 分`);
+
+            // 计算填空
+            let fillCorrect = 0;
+            const fillInputs = document.querySelectorAll('input[data-answer]');
+            fillInputs.forEach(input => {
+                if (input.classList.contains('blank-input') && input.closest('.question')) {
+                    const answerKey = input.dataset.answer;
+                    const userAns = String(input.value.trim()).toLowerCase();
+                    const correctAns = String(answerKey).trim().toLowerCase();
+                    
+                    let isCorrect = false;
+                    if (userAns === correctAns) {
+                        isCorrect = true;
+                    } else if (correctAns === 'i' && userAns === 'i') {
+                        isCorrect = true;
+                    } else if (correctAns === '4-i' && (userAns === '4-i' || userAns === '4 - i')) {
+                        isCorrect = true;
+                    } else if (correctAns === 'break' && userAns === 'break') {
+                        isCorrect = true;
+                    } else if (correctAns === '>' && userAns === '>') {
+                        isCorrect = true;
+                    }
+                    
+                    if (isCorrect) fillCorrect++;
+                }
+            });
+            let fillScore = fillCorrect * scores.fill;
+            totalScore += fillScore;
+            details.push(`填空：${fillCorrect}/5 正确，得 ${fillScore} 分`);
+
+            return { totalScore, details, userAnswers };
+        }
+
+        async function submitQuiz() {
+            const name = document.getElementById('name').value.trim();
+            const className = document.getElementById('className').value.trim();
+            const studentId = document.getElementById('studentId').value.trim();
+
+            if (!name || !className || !studentId) {
+                showToast('请填写完整信息（姓名、班级、学号）');
+                return;
+            }
+
+            const result = calculateScore();
+            
+            // 显示结果
+            const resultCard = document.getElementById('resultCard');
+            document.getElementById('scoreNum').textContent = result.totalScore;
+            document.getElementById('resultDetail').innerHTML = result.details.join('<br>');
+            resultCard.classList.add('show');
+            
+            // 禁用提交按钮
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').textContent = '已提交';
+
+            // 保存到本地
+            const fullResult = {
+                name, className, studentId,
+                score: result.totalScore,
+                userAnswers: result.userAnswers
+            };
+            saveResult(fullResult);
+            showToast('答题已保存');
+
+            // 发送到服务器
+            try {
+                const postData = {
+                    name: name,
+                    className: className,
+                    studentId: studentId,
+                    score: result.totalScore,
+                    totalScore: 100,
+                    answers: JSON.stringify(result.userAnswers),
+                    submitTime: new Date().toLocaleString('zh-CN')
+                };
+                
+                const response = await fetch('https://quickform.cn/api/3jv2i9e3rb', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                });
+                
+                if (response.ok) {
+                    showToast('答案已提交到服务器');
+                } else {
+                    console.log('服务器响应:', response.status);
+                }
+            } catch (e) {
+                console.log('提交失败:', e);
+            }
+
+            // 滚动到顶部显示结果
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 选项点击效果
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const name = this.querySelector('input').name;
+                document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+                    r.closest('.option').classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>
